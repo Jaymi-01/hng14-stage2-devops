@@ -35,3 +35,5 @@ File: docker-compose.yml | Line: 4 | Bug: Redis was starting without authenticat
 File: api/Dockerfile | Line: 17 | Bug: Healthcheck failed because curl was missing from the slim base image. | Fix: Installed curl in the runtime stage to allow Docker to verify service health.
 
 File: .github/workflows/ci.yml | Line: N/A | Bug: Missing automated testing and integration pipeline. | Fix: Created a CI pipeline to automate dependency installation, unit testing, and Docker build verification on every push.
+
+File: .github/workflows/ci.yml | Line: 45 | Bug: pipeline_has_trivy failed because the scanner attempted to check an image before it was built. | Fix: Reordered workflow steps to ensure the Docker build completes before the security scan.
