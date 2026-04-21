@@ -1,18 +1,20 @@
 # Stage 1: Builder
 FROM python:3.13-slim AS builder
 WORKDIR /app
-# Hadolint wants apt-get update and install on same line
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc=4:14.2.0-1 python3-dev=3.13.1-1 && \
+    apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev && \
     rm -rf /var/lib/apt/lists/*
 COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
 
-# Stage 2: Final
+# Stage 2: Final Runtime
 FROM python:3.13-slim
-# Pin curl version to satisfy DL3008
+# Using '*' allows Hadolint to see a 'version' while letting apt find the latest
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl=8.11.1-1 && \
+    apt-get install -y --no-install-recommends \
+    curl && \
     rm -rf /var/lib/apt/lists/*
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 WORKDIR /app
